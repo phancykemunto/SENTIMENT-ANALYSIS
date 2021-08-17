@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+ <head>
+ <title>Movie Sentiment Analysis</title>
+ 
+ </head>
+ <body bgcolor="fbe3e8">
+<h1 align="center" style="color:#8458b3;font-family:verdana"><u>Welcome to Sentiment Analyzer</u></h1>
+<h2 align="center" style="color:#5cbdb9;font-family:verdana">Please enter your movie Review:</h2>
+<form align="center" method="post" action="/results">
+ <dl>
+ {{ form.moviereview ( cols='30', rows='10', minlength="15" ) }}
+ </dl>
+ <div>
+ <input style="color:#5cbdb9;font-family:verdana;font-size:20px;height:200px;width:200px" type="submit" value='Submit Review' name='submit_btn'required>
+ </div>
+</form>
+</body>
+</html>
