@@ -27,14 +27,14 @@ import nltk  ## Preprocessing Reviews
 
 corpus = []
 for i in range(0,3000):   #we have 3000 reviews
-     review = re.sub('[^a-zA-Z]'," ",data["Review"][i])
+     review = re.sub('[^a-zA-Z]', '', data['Review'][i])
      review = review.lower()
      review = review.split()
      pe = WordNetLemmatizer()
      all_stopword = stopwords.words('english')
      all_stopword.remove('not')
      
-     review = " ".join(review)
+     review = ''.join(review)
      corpus.append(review)
 print(corpus)
 
@@ -66,4 +66,4 @@ classifier.score(X_test,y_test)
 
 # Creating a pickle file for the Multinomial Naive Bayes model
 #filename = 'voting_clf.pkl'
-pickle.dump(cls, open("Review.pkl", 'wb'))
+pickle.dump(cls, open('Review.pkl', 'wb'))
