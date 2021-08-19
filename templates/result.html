@@ -1,20 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
- <head>
- <title>Sentiment Analysis</title>
- 
- </head>
- <body bgcolor="#dobdf4">
-<h1 align="center" style="color:#2d545e;font-family:verdana"><u> Predictions on your Review</u></h1>
-<h3 align="center" >Your movie Review:</h3>
-<div align="center" style="color:blue;font-family:verdana">{{ content }}</div>
-<h3 align="center">Prediction:</h3>
-<div align="center" style="color:red; font-family:verdana">This movie review is <strong>{{ prediction }}</strong>
- (probability: {{ probability }}%).</div>
-<div id='button'align="center"><br/><br/>
- <form align="center" action="/">
- <input type="submit" style="color:#2d545e" value='Submit another Review'>
- </form>
-</div>
+<head>
+	<title></title>
+    
+</head>
+<body>
+
+	<header>
+		<div class="container">
+		<div id="brandname">
+			ML App
+		</div>
+		<h2>positive review</h2>
+		
+	</div>
+	</header>
+	<p text-align: center;"><b>positive</b></p>
+	<div class="results">
+
+
+		
+	{% if prediction == 1%}
+	<h2 >positive</h2>
+	{% elif prediction == 0%}
+	<h2 >Not a positive (It is a negative)</h2>
+	{% endif %}
+
+	</div>
+
 </body>
 </html>

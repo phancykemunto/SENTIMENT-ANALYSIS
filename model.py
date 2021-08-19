@@ -15,32 +15,34 @@ print(data.info())  ### Give concise summary of a DataFrame
 print(data.head())  ## top 5 rows of the dataframe
 print(data.tail()) ## bottom 5 rows of the dataframe
 
-#import seaborn as sns
-#sns.countplot('Sentiment',data=data)
-from nltk import WordNetLemmatizer
-from nltk.corpus import stopwords ## removing all the stop words
-from gensim.utils import lemmatize
-import re  ## To use Regular expression
+#import nltk  ## Preprocessing Reviews
 import nltk  ## Preprocessing Reviews
+#nltk.download('stopwords') ##Downloading stopwords
+#nltk.download('wordnet')
+from nltk.corpus import stopwords ## removing all the stop words
+from nltk.stem.porter import PorterStemmer ## stemming of words
+from nltk.stem import WordNetLemmatizer
+import re  ## To use Regular expression
+stemmer = PorterStemmer()
 
 
 
 corpus = []
-for i in range(0,3000):   #we have 3000 reviews
-     review = re.sub('[^a-zA-Z]', '', data['Review'][i])
-     review = review.lower()
-     review = review.split()
-     pe = WordNetLemmatizer()
-     all_stopword = stopwords.words('english')
-     all_stopword.remove('not')
-     
-     review = ''.join(review)
-     corpus.append(review)
-print(corpus)
+for i in range(len(data)):
+    review = re.sub('[^a-zA-Z]', ' ', data['Review'][i])
+    review = review.lower()
+    review = review.split()
+    all_stopwords = stopwords.words('english')
+    all_stopwords.remove('not') 
+    #remove negative word 'not' as it is closest word to help determine whether the review is good or not 
+    review = [stemmer.stem(word) for word in review if not word in set(all_stopwords)]
+    review = ' '.join(review)
+    corpus.append(review)
 
+print(corpus)
 # Creating the Bag of Words model
 from sklearn.feature_extraction.text import CountVectorizer
-cv = CountVectorizer(max_features=1500) ##1500 columns
+cv = CountVectorizer(max_features=1000) ##1500 columns
 X = cv.fit_transform(corpus).toarray()
 
 y = data["Sentiment"]
@@ -53,17 +55,38 @@ from sklearn.model_selection import train_test_split
 X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.3,random_state=10)
 
 
-#MultinomialNB
+
+#GaussianNB
 from sklearn.naive_bayes import MultinomialNB,GaussianNB
-classifier = GaussianNB()
-classifier.fit(X_train, y_train)
-cls = MultinomialNB()
-cls.fit(X_train, y_train)
+from sklearn.model_selection import cross_val_score
+from sklearn import metrics
+from sklearn.metrics import confusion_matrix
+#classifier = GaussianNB().fit(X_train, y_train)
+#MNB = MultinomialNB()
+#cls = MultinomialNB().fit(X_train, y_train)
+gnb = GaussianNB(var_smoothing=1e-2)
+from sklearn.model_selection import StratifiedKFold
+kfold = StratifiedKFold(n_splits=12)
+cv = cross_val_score(gnb,X_train,y_train,cv=kfold)
+print(cv)
+print(cv.mean()*100)
+gnb.fit(X_train,y_train)
+y_pred_gnb=gnb.predict(X_test)
+print('The accuracy of the Naive Bayes is', metrics.accuracy_score(y_pred_gnb,y_test)*100)
+cm=confusion_matrix(y_test, y_pred_gnb)
+print(cm)
 
-cls.score(X_test,y_test)
-
-classifier.score(X_test,y_test)
+#MultinomialNB
+mnb = MultinomialNB(alpha=2)
+cv = cross_val_score(mnb,X_train,y_train,cv=kfold)
+print(cv)
+print(cv.mean()*100)
+mnb.fit(X_train,y_train)
+y_pred_mnb=mnb.predict(X_test)
+print('The accuracy of the Naive Bayes is', metrics.accuracy_score(y_pred_mnb,y_test)*100)
+cm=confusion_matrix(y_test, y_pred_mnb)
+print(cm)
 
 # Creating a pickle file for the Multinomial Naive Bayes model
 #filename = 'voting_clf.pkl'
-pickle.dump(cls, open('Review.pkl', 'wb'))
+pickle.dump(mnb, open("Review.pkl", 'wb'))

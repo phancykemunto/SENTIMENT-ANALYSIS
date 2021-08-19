@@ -1,22 +1,37 @@
+<<!DOCTYPE html>
 <html>
-    <head>
-        <title>{{ title }} Movie Sentiment Analysis</title>
-        #<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    </head>
-    <body>
-        <h1>Welcome To Sentiment Analyzer</h1>
-        <form method="POST">
-            <textarea name="Review" placeholder="Enter yur Review Here: ...."></textarea><br><br>
+<head>
+	<title>Movie sentiment analysis</title>
+	
+</head>
+<body>
 
-            <input class="example_a" type="submit">
-        </form>
-        {% if final %}
-        <div>
-            <h2>The Sentiment of</h2> '{{ Review }}' <h2>is {{ good }}% positive !</h2>
-            {% else %}
-            <h2>The Sentiment of</h2> '{{ Review }}' <h2>is {{ bad }}% negative ! </h2>
-            {% endif %}
-        </div>
-        <span>by PHANICE</span>
-    </body>
+	<header>
+		<div class="container">
+		<div id="brandname">
+			Machine Learning App with Flask
+		</div>
+		<h2>sentiment detector for reviews</h2>
+		
+	</div>
+	</header>
+
+	<div class="ml-container">
+
+		<form action="{{ url_for('predict')}}" method="POST">
+		<p>Enter Your Message Here</p>
+		<!-- <input type="text" name="comment"/> -->
+		<textarea name="Review"></textarea>
+		<br/>
+
+		<input type="submit" class="btn-info" value="predict">
+		
+	</form>
+		
+	</div>
+
+	
+	
+
+</body>
 </html>

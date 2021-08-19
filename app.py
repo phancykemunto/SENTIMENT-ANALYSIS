@@ -4,7 +4,7 @@ import pickle
 
 # Load the Multinomial Naive Bayes model and CountVectorizer object from disk
 #filename = 'voting_clf.pkl'
-cls = pickle.load(open('Review.pkl', 'rb'))
+NB = pickle.load(open('Review.pkl', 'rb'))
 cv = pickle.load(open('countvector.pkl','rb'))
 
 app = Flask(__name__)
@@ -17,11 +17,11 @@ def home():
 @app.route('/predict',methods=['POST'])
 def predict():
     if request.method == 'POST': 
-       Review = request.form['Review']
-       data = [Review]
-       vect = cv.transform(data).toarray()
-       my_prediction = cls.predict(vect)
-       return render_template('home.html',prediction = my_prediction)
+      Review = request.form['Review']
+      data = [Review]
+      vect = cv.transform(data).toarray()
+      my_prediction = NB.predict(vect)
+      return render_template('result.html',prediction = my_prediction)
 
 
 
